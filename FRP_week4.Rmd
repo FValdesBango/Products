@@ -1,0 +1,100 @@
+---
+title: "Fertility Rates Around the World"
+author: "FVB"
+date: "22/2/2018"
+output:
+  ioslides_presentation: default
+---
+
+## Origin
+<font size="5">  This data comes from the [Data World Bank](https://datacatalog.worldbank.org/dataset/gender-statistics) content
+of statistics about genders around the world.
+
+We're going to focus ourselves on the values of fertility rates ( annual number of births for each 1000 people in the group of interest)  of teenage girls (women 15 to 19 years of age) in different regions of the world and also according to their country income.
+
+The idea is to provide a tool that allows a quick look to the user on its evolution but with enough mathematical background to infere some relationships. Here it has been splited over two slides for visualization purpouses.</font>
+
+## Results-I
+```{r plotly, warning=FALSE,error=FALSE,echo=FALSE,message=FALSE, fig.width=1}
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(shiny)
+library(data.table)
+inputPanel(
+sliderInput("ryears",
+                   "Choose period of years visualized:",
+                   min = 1960,
+                   max = 2015,
+                   value = c(1960,2015))
+)
+       teenager.fr<-read.csv("https://raw.githubusercontent.com/FValdesBango/Products/master/fertility.csv")
+       
+        teen.fr.all<-gather(teenager.fr,na.rm = T,key="Year",value="FertilityRate",X1960:X2015) %>% 
+                select(Year,Country.Name,Country.Code,FertilityRate)
+        
+        teen.fr.all<-mutate(teen.fr.all, Year=as.numeric(str_sub(Year,2,5)))
+        
+        country.order<-c(1,2,3,5,9,12,15,22,27,29,32,33,40,42,46)
+        
+        teen.fr.filt<-teen.fr.all[ teen.fr.all$Country.Code %in% teen.fr.all$Country.Code[country.order] ,]
+        
+        years<-reactive({ input$ryears })
+          
+        
+        renderPlotly({
+          
+          plot_ly(data = teen.fr.filt[teen.fr.filt$Year %in% years()[1]:years()[2],],x=~Year,y=~FertilityRate,split=~Country.Code,color =~Country.Name, type="scatter",mode="lines") %>%
+                  layout(title="Teenage girls fertility rate around the world",yaxis=list(title="Fertility Rate (for each 1.000)"))
+                })      
+
+```
+
+## Results-II
+<font size="1">
+<div class="verysmall">
+```{r outputs, eval=T,echo=F, fig.height=0.75,fig.align="center"}
+
+inputPanel(
+       sliderInput("syear",
+                   "Select a year for more detailed information:",
+                   min=1960,
+                   max=2015,
+                   value=2015)
+) 
+  inf.y.table<-reactive({
+          sum.y.t<-summarise(.data=group_by(teen.fr.filt[teen.fr.filt$Year==as.numeric(input$syear),],Country.Name),"Fertility Rate"=FertilityRate)
+          sum.y.t[order(sum.y.t$`Fertility Rate`,decreasing = T),]
+          })
+  
+  inf.y.mean<-reactive({
+          data.frame("World Mean Fertility"=mean(teen.fr.filt[teen.fr.filt$Year==as.numeric(input$syear),4]))     
+  }) 
+
+renderTable(inf.y.table())
+ renderTable(inf.y.mean())
+```
+</div>
+</font>
+
+## Conclusions
+
+<font size="2">
+-All rate have gone down from theri values in 1960.
+
+-Not surprisingly at higher income fewer pregnancies in teenage period.
+
+-The biggest relative changes have taken place in Western World lowering up to a 25% of their starting values. A little bit less for Arabian World, South Asia and Caribbean (around a 25-33% of their original values), followed middle income and Latin American areas (50%) and finally subsaharian countries(66%).
+
+-In absolute term however the biggest changes ahven taken for Caribbean (-100 on each 1000 girls), South Asia (-80), Sub-Saharian and Low income(-50 aprox each).Being the most steady the Western Countries, particulary the High income, and Europe (-30 each).
+
+-South Asia starts to reduce this value around 1980: being simplistic its eems to fit the end of the Vietnam war but also the introduction of the only one kid policy in China. Subsaharian countries start aroudn the same time, without any specific reason decolonisation took place some years before and could affect.
+
+-Finally it seems low-income countries have reduced their rate significantly since mid 90s, with a rate quite steady in the previous period.
+
+
+
+Thanks for reading :D!
+
+</font>
+
