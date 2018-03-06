@@ -1,0 +1,63 @@
+---
+title: "Fertility Rates Around the World"
+author: "FVB"
+date: "22/2/2018"
+output:
+  ioslides_presentation: default
+---
+
+## Origin
+<font size="5">  This data comes from the [Data World Bank](https://datacatalog.worldbank.org/dataset/gender-statistics) content
+of statistics about genders around the world.
+
+We're going to focus ourselves on the values of fertility rates ( annual number of births for each 1000 people in the group of interest)  of teenage girls (women 15 to 19 years of age) in different regions of the world and also according to their country income.
+
+The idea is to provide a tool that allows a quick look to the user on its evolution but with enough mathematical background to infere some relationships. Here it has been splited over two slides for visualization purpouses.</font>
+
+## Results-I
+
+Application Structure
+
+Inputs: Two possible inputs have been created: 
+
+-A time range slider from where you choose the initial and ending dates for the app graph.
+
+-A specific year selector to offer you specific numeric information for that year.
+
+Outputs:
+
+-An interactive graphic in plotly format.
+
+-A double panel with numeric values for the fertility of that year.
+
+## Example Image
+
+```{r image, echo=FALSE}
+# Define variable containing url
+url <- "https://raw.githubusercontent.com/FValdesBango/Products/master/example.png"
+```
+<center><img src="`r url`"></center>
+
+
+
+## Conclusions
+
+<font size="2">
+-All rate have gone down from theri values in 1960.
+
+-Not surprisingly at higher income fewer pregnancies in teenage period.
+
+-The biggest relative changes have taken place in Western World lowering up to a 25% of their starting values. A little bit less for Arabian World, South Asia and Caribbean (around a 25-33% of their original values), followed middle income and Latin American areas (50%) and finally subsaharian countries(66%).
+
+-In absolute term however the biggest changes ahven taken for Caribbean (-100 on each 1000 girls), South Asia (-80), Sub-Saharian and Low income(-50 aprox each).Being the most steady the Western Countries, particulary the High income, and Europe (-30 each).
+
+-South Asia starts to reduce this value around 1980: being simplistic its eems to fit the end of the Vietnam war but also the introduction of the only one kid policy in China. Subsaharian countries start aroudn the same time, without any specific reason decolonisation took place some years before and could affect.
+
+-Finally it seems low-income countries have reduced their rate significantly since mid 90s, with a rate quite steady in the previous period.
+
+
+
+Thanks for reading :D!
+
+</font>
+
